@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplayer Maze Racer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Google Fonts for Premium Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- LOBBY SCREEN -->
+        <div id="lobby-screen" class="screen active">
+            <div class="logo-area">
+                <h1>Maze <span class="highlight">Racer</span></h1>
+                <p>Real-time Multiplayer Battles</p>
+            </div>
+
+            <div class="lobby-content">
+                <div class="player-setup">
+                    <label>Enter Nickname</label>
+                    <input type="text" id="player-name" placeholder="Your Name" maxlength="12">
+                </div>
+
+                <div class="action-cards">
+                    <!-- Create Room -->
+                    <div class="card create-card">
+                        <h2>Create Room</h2>
+                        <div class="control-group">
+                            <label>Players</label>
+                            <div class="range-selector">
+                                <input type="range" id="max-players" min="2" max="10" value="2"
+                                    oninput="this.nextElementSibling.value = this.value">
+                                <output>2</output>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label>Rounds</label>
+                            <div class="range-selector">
+                                <input type="range" id="total-rounds" min="1" max="10" value="3"
+                                    oninput="this.nextElementSibling.value = this.value">
+                                <output>3</output>
+                            </div>
+                        </div>
+                        <button id="create-btn" class="btn primary-btn">Create & Play</button>
+                    </div>
+
+                    <!-- Join Room -->
+                    <div class="card join-card">
+                        <h2>Join Room</h2>
+                        <div class="input-wrapper">
+                            <input type="text" id="room-code-input" placeholder="CODE" maxlength="4">
+                        </div>
+                        <button id="join-btn" class="btn secondary-btn">Join Game</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WAITING SCREEN -->
+        <div id="waiting-screen" class="screen">
+            <div class="waiting-content">
+                <h2>Waiting for Players</h2>
+                <div class="room-code-display">
+                    <span>Room Code:</span>
+                    <h1 id="display-room-code">----</h1>
+                </div>
+
+                <div class="pulse-loader">
+                    <div class="pulse-ring"></div>
+                    <div class="status-text">Waiting for <span id="required-count-display">0</span> players...</div>
+                </div>
+
+                <div class="players-grid" id="player-list">
+                    <!-- Player badges will go here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="game-screen" class="screen">
+            <div class="game-top-bar">
+                <div class="stat-box">
+                    <span class="label">Round</span>
+                    <span class="value" id="current-round">1</span><span class="divider">/</span><span class="value"
+                        id="max-rounds">3</span>
+                </div>
+                <div class="stat-box">
+                    <span class="label">Time</span>
+                    <span class="value" id="game-timer">00.0s</span>
+                </div>
+                <div class="stat-box">
+                    <span class="label">Room</span>
+                    <span class="value" id="game-room-code">CODE</span>
+                </div>
+                <div id="winner-announcement"
+                    style="margin-left: auto; font-weight: bold; color: var(--accent); font-size: 1.2rem;"></div>
+            </div>
+
+            <!-- DYNAMIC GAME LAYOUT -->
+            <div id="game-boards-container" class="boards-container">
+                <!-- Canvases will be injected here by JS -->
+            </div>
+            <!-- OVERLAY FOR COUNTDOWN -->
+            <div id="countdown-overlay" class="overlay">
+                <div class="countdown-number" id="countdown-text">3</div>
+            </div>
+
+            <!-- OVERLAY FOR ROUND RESULT -->
+            <div id="result-overlay" class="overlay">
+                <div class="result-card">
+                    <h2 id="result-title">FINISH!</h2>
+                    <p id="round-stat">Round 1 of 3</p>
+                    <div class="result-actions">
+                        <button id="next-round-btn" class="btn primary-btn">Ready for Next Round</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME OVER SCREEN -->
+        <div id="game-over-screen" class="screen">
+            <div class="game-over-content">
+                <h1 id="game-over-title" class="champion-text">🏆 Grand Champion 🏆</h1>
+                <h2 id="grand-winner-name" class="highlight">Player Name</h2>
+
+                <div class="final-leaderboard">
+                    <h3>Tournament Results</h3>
+                    <ul id="final-results-list">
+                        <!-- Final stats -->
+                    </ul>
+                </div>
+
+                <div class="ending-actions">
+                    <button id="play-again-btn" class="btn primary-btn">Play Again</button>
+                    <button onclick="location.reload()" class="btn secondary-btn">Exit to Lobby</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- AUDIO ELEMENTS (Optional flair) -->
+    <!-- <audio id="bg-music" loop src="..."></audio> -->
+
+    <script src="script.js"></script>
+</body>
+
+</html>
